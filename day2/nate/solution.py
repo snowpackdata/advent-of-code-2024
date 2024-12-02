@@ -21,9 +21,7 @@ def solve_part_one(input_list : [[int]]) -> int:
 def solve_part_two(input_list : [[int]]) -> int:
     # for each list get all sublists
     master_list = []
-    counter = 0
     for subarray in input_list:
-        counter += 1
         subsets = [subarray[:i] + subarray[i+1:] for i in range(len(subarray))]
         master_list.append(any(is_safe(i) for i in subsets))
 
