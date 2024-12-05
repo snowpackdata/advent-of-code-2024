@@ -15,6 +15,9 @@ class Node:
     def __repr__(self):
         return f"{self.type}: {self.index}"
 
+    def next_node(self, direction : tuple[int, int]) -> tuple[int, int]:
+        return self.index[0] + direction[0], self.index[1] + direction[1]
+
 class Solver:
     def __init__(self, rows : int, columns: int):
         self.rows = rows
@@ -34,26 +37,27 @@ class Solver:
     # def node_is_valid(self, node:Node, direction : tuple[int, int]) -> bool:
     #         return True
     def walk_to_next_node(self, current_node: Node, direction: tuple[int, int], depth: int) -> bool:
+        # Recursive Node walk will perform a depth first search
         if depth >3:
             return False
-        next_location = (current_node.index[0] +direction[0], current_node.index[1]+direction[1])
+        next_location = current_node.next_node(direction)
         if not self.node_exists(next_location):
             return False
         next_node = self.get_node(next_location)
         if next_node.type == "S":
             return False
         if next_node.type == "X" and current_node.type == "M":
-            next_node.value += 1
+           return True
         if next_node.type == "M" and current_node.type == "A":
-            self.walk_to_next_node(next_node, direction, depth+1)
+            return self.walk_to_next_node(next_node, direction, depth+1)
         if next_node.type == "A" and current_node.type == "S":
-            self.walk_to_next_node(next_node, direction, depth+1)
+            return self.walk_to_next_node(next_node, direction, depth+1)
         return False
 
     def walk_to_next_node_secondary(self, current_node: Node, direction: tuple[int, int], depth:int) ->bool:
         if depth >2:
             return False
-        next_location = (current_node.index[0] +direction[0], current_node.index[1]+direction[1])
+        next_location = current_node.next_node(direction)
         if not self.node_exists(next_location):
             return False
         next_node = self.get_node(next_location)
@@ -65,29 +69,27 @@ class Solver:
             current_node.value += 1
             return True
         if next_node.type == "A" and current_node.type == "S":
-            self.walk_to_next_node_secondary(next_node, direction, depth+1)
+            return self.walk_to_next_node_secondary(next_node, direction, depth+1)
         return False
 
     def solve(self):
+        solution = 0
         for index in list(itertools.product(range(self.rows), range(self.columns))):
             node = self.get_node(index)
             if node.type != "S":
                 continue
             for direction in list(itertools.product(range(-1,2,1), range(-1,2,1))):
                 if self.walk_to_next_node(node, direction, 0):
-                    print("Found Solution")
-        solution = 0
-        for index in list(itertools.product(range(self.rows), range(self.columns))):
-            solution += self.get_node(index).value
+                    solution += 1
         return solution
-    def solve_pt_2(self):
+    def solve_part_2(self):
         for index in list(itertools.product(range(self.rows), range(self.columns))):
             node = self.get_node(index)
             if node.type != "S":
                 continue
             for direction in list(itertools.product([-1, 1], [-1, 1])):
-                if self.walk_to_next_node_secondary(node, direction, 0):
-                    print("Found Solution")
+                success = self.walk_to_next_node_secondary(node, direction, 0)
+        # Part two solution requires a second pass two see which nodes actually have 2 crossing "mas"
         solution = 0
         for index in list(itertools.product(range(self.rows), range(self.columns))):
             if self.get_node(index).value == 2:
@@ -113,6 +115,6 @@ if __name__ == '__main__':
     filelines = read_file('./input.txt')
     solver = parse_content_to_output(filelines)
     solution_part_one = solver.solve()
-    solution_part_two = solver.solve_pt_2()
+    solution_part_two = solver.solve_part_2()
     print(f"Solution to part 1: {solution_part_one}")
     print(f"Solution to part 2: {solution_part_two}")
