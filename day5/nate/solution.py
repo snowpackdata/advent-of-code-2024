@@ -35,7 +35,7 @@ class Page:
     def __lt__(self, other: Self):
         return self._ruleset.compare(self._token, other._token)
     def __le__(self, other: Self):
-        return self._ruleset.compare(self._token, other._token)
+        return self._ruleset.compare(self._token, other._token) or self._token == other._token
     def __eq__(self, other: Self):
         return self._token == other._token
     def __ne__(self, other: Self):
@@ -43,7 +43,7 @@ class Page:
     def __gt__(self, other: Self):
         return not self._ruleset.compare(self._token, other._token)
     def __ge__(self, other: Self):
-        return not self._ruleset.compare(self._token, other._token)
+        return not (self._ruleset.compare(self._token, other._token) or self._token == other._token)
     def __repr__(self):
         return self._token
     def __add__(self, other):
