@@ -1,6 +1,7 @@
 import itertools
 from typing import Self
 from collections import defaultdict
+import timeit
 
 
 class Ruleset:
@@ -88,7 +89,13 @@ if __name__ == '__main__':
     ruleset = Ruleset(rules)
     inputtext = read_file('./input_pages.txt')
     pages = parse_file_to_pages(inputtext, ruleset)
+    # Solve Part One
+    start_time = timeit.default_timer()
     solution_part_one =  solution_part_one(pages)
+    part_one_time = timeit.default_timer() - start_time
+    # Solve Part Two
+    start_time_two = timeit.default_timer()
     solution_part_two = solution_part_two(pages)
-    print(f"Solution to part 1: {solution_part_one}")
-    print(f"Solution to part 2: {solution_part_two}")
+    part_two_time = timeit.default_timer() - start_time_two
+    print(f"Solution to part 1: {solution_part_one} in {part_one_time*1000: .2f} ms")
+    print(f"Solution to part 2: {solution_part_two} in {part_two_time*1000: .2f} ms")
