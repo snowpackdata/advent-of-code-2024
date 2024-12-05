@@ -16,7 +16,7 @@ class Ruleset:
         self._ruleset[a][b] = True
         self._ruleset[b][a] = False
         return
-    def check(self, page_lesser : str, page_greater : str) -> bool:
+    def compare(self, page_lesser : str, page_greater : str) -> bool:
         result = self._ruleset[page_lesser][page_greater]
         if result is not None:
             return result
@@ -32,17 +32,17 @@ class Page:
         # ruleset that was created separately but we can't do that with python. Each gets their own
         self._ruleset = ruleset
     def __lt__(self, other: Self):
-        return self._ruleset.check(self._token, other._token)
+        return self._ruleset.compare(self._token, other._token)
     def __le__(self, other: Self):
-        return self._ruleset.check(self._token, other._token)
+        return self._ruleset.compare(self._token, other._token)
     def __eq__(self, other: Self):
         return self._token == other._token
     def __ne__(self, other: Self):
         return self._token != other._token
     def __gt__(self, other: Self):
-        return not self._ruleset.check(self._token, other._token)
+        return not self._ruleset.compare(self._token, other._token)
     def __ge__(self, other: Self):
-        return not self._ruleset.check(self._token, other._token)
+        return not self._ruleset.compare(self._token, other._token)
     def __repr__(self):
         return self._token
     def __add__(self, other):
