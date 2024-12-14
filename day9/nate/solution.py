@@ -4,9 +4,8 @@ import timeit
 from dataclasses import dataclass
 import sys
 import resource
-from unittest.mock import right
 
-from black.trans import defaultdict
+from collections import defaultdict
 
 
 def read_file(location: str):
